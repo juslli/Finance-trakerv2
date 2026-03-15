@@ -1,3 +1,50 @@
+/* ============================================================
+   FINANCE TRACKER — style.css
+   Tema: Dark + Roxo
+   Seções:
+     1. Variáveis e Reset
+     2. Layout base
+     3. Header
+     4. Cards de resumo
+     5. Painel (container genérico)
+     6. Formulário
+     7. Filtros
+     8. Gráfico
+     9. Lista de transações
+    10. Footer
+    11. Responsivo
+============================================================ */
+
+
+/* ── 1. VARIÁVEIS E RESET ── */
+
+:root {
+  --bg:       #08070f;
+  --bg2:      #100e1d;
+  --bg3:      #16132a;
+
+  --border:   rgba(139, 92, 246, 0.15);
+  --border2:  rgba(139, 92, 246, 0.30);
+
+  --purple:   #8b5cf6;
+  --purple2:  #a78bfa;
+  --purple3:  #6d28d9;
+
+  --green:    #34d399;
+  --red:      #f87171;
+  --yellow:   #fbbf24;
+  --blue:     #60a5fa;
+
+  --text:     #f5f3ff;
+  --muted:    #7c6fa0;
+  --muted2:   #4a4166;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,90 +52,170 @@
 }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #0f172a;
-  color: #e2e8f0;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  background-image: radial-gradient(
+    ellipse 80% 50% at 50% -10%,
+    rgba(109, 40, 217, 0.25) 0%,
+    transparent 70%
+  );
+  color: var(--text);
   min-height: 100vh;
-  padding: 24px 16px;
+  padding: 32px 16px 60px;
 }
 
+
+/* ── 2. LAYOUT BASE ── */
+
 .app {
-  max-width: 700px;
+  max-width: 680px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
-/* Header */
+
+/* ── 3. HEADER ── */
+
 .header {
   text-align: center;
-  padding: 16px 0;
+  padding: 20px 0 8px;
+}
+
+.header-badge {
+  display: inline-block;
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--purple2);
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid var(--border2);
+  border-radius: 99px;
+  padding: 4px 14px;
+  margin-bottom: 12px;
 }
 
 .header h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #f8fafc;
-  letter-spacing: -0.5px;
+  font-family: 'Syne', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #f5f3ff 0%, var(--purple2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.subtitulo {
-  color: #94a3b8;
+.header p {
+  color: var(--muted);
   font-size: 14px;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
-/* Cards de resumo */
+
+/* ── 4. CARDS DE RESUMO ── */
+
 .resumo {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 12px;
 }
 
 .card {
-  background: #1e293b;
-  border-radius: 12px;
-  padding: 20px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
   text-align: center;
-  border: 1px solid #334155;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.2s;
 }
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border2);
+}
+
+/* Linha colorida no topo de cada card */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.card-saldo::before   { background: linear-gradient(90deg, var(--purple3), var(--purple2)); }
+.card-receita::before { background: linear-gradient(90deg, #059669, var(--green)); }
+.card-despesa::before { background: linear-gradient(90deg, #991b1b, var(--red)); }
 
 .card-label {
   display: block;
-  font-size: 12px;
-  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
+  color: var(--muted);
+  margin-bottom: 10px;
 }
 
 .card-valor {
-  font-size: 22px;
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
   font-weight: 700;
+  display: block;
+  transition: color 0.3s;
 }
 
-.card-saldo .card-valor { color: #f8fafc; }
-.card-receita .card-valor { color: #4ade80; }
-.card-despesa .card-valor { color: #f87171; }
+.card-saldo   .card-valor { color: var(--purple2); }
+.card-receita .card-valor { color: var(--green); }
+.card-despesa .card-valor { color: var(--red); }
 
-/* Formulário */
-.formulario-container,
-.filtros-container,
-.lista-container {
-  background: #1e293b;
-  border-radius: 12px;
+
+/* ── 5. PAINEL (container genérico) ── */
+
+.painel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
   padding: 24px;
-  border: 1px solid #334155;
+  transition: border-color 0.3s;
 }
 
-.formulario-container h2,
-.filtros-container h2 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #f1f5f9;
+.painel:focus-within {
+  border-color: var(--border2);
 }
+
+.painel-titulo {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Barra roxa vertical antes do título */
+.painel-titulo::before {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 16px;
+  background: var(--purple);
+  border-radius: 99px;
+  flex-shrink: 0;
+}
+
+
+/* ── 6. FORMULÁRIO ── */
 
 .formulario {
   display: grid;
@@ -103,149 +230,266 @@ body {
 }
 
 label {
-  font-size: 12px;
-  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  color: var(--muted);
 }
 
-input, select {
-  background: #0f172a;
-  border: 1px solid #334155;
-  border-radius: 8px;
-  padding: 10px 12px;
-  color: #e2e8f0;
+input,
+select {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  color: var(--text);
   font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
-input:focus, select:focus {
-  border-color: #6366f1;
+/* Seta customizada no select */
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b5cf6' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
 }
 
-/* Botão adicionar ocupa linha inteira */
+input::placeholder {
+  color: var(--muted2);
+}
+
+input:focus,
+select:focus {
+  border-color: var(--purple);
+  background: rgba(139, 92, 246, 0.06);
+}
+
 .btn-adicionar {
   grid-column: 1 / -1;
-  background: #6366f1;
+  background: linear-gradient(135deg, var(--purple3) 0%, var(--purple) 100%);
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 15px;
+  border-radius: var(--radius-sm);
+  padding: 13px;
+  font-size: 14px;
   font-weight: 600;
+  font-family: 'Syne', sans-serif;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 4px 20px rgba(109, 40, 217, 0.35);
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
 }
 
-.btn-adicionar:hover { background: #4f46e5; }
-.btn-adicionar:active { transform: scale(0.98); }
+.btn-adicionar:hover {
+  opacity: 0.9;
+  box-shadow: 0 4px 28px rgba(109, 40, 217, 0.55);
+}
 
-/* Filtros */
+.btn-adicionar:active {
+  transform: scale(0.98);
+}
+
+
+/* ── 7. FILTROS ── */
+
 .filtros {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
 .filtro {
-  background: #0f172a;
-  border: 1px solid #334155;
-  color: #94a3b8;
-  padding: 6px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 6px 18px;
   border-radius: 99px;
   font-size: 13px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.filtro.ativo {
-  background: #6366f1;
-  border-color: #6366f1;
-  color: white;
+.filtro:hover {
+  border-color: var(--purple);
+  color: var(--purple2);
 }
 
-/* Lista */
+.filtro.ativo {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: var(--purple);
+  color: var(--purple2);
+  font-weight: 600;
+}
+
+
+/* ── 8. GRÁFICO ── */
+
+.grafico-container {
+  display: none; /* aparece via JS quando tem despesas */
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.grafico-titulo {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.grafico-container canvas {
+  max-height: 220px;
+}
+
+
+/* ── 9. LISTA DE TRANSAÇÕES ── */
+
 .lista {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .lista-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #0f172a;
-  border-radius: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   padding: 14px 16px;
-  border-left: 4px solid transparent;
-  animation: entrar 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  animation: entrar 0.25s ease;
+  transition: border-color 0.2s, transform 0.15s;
 }
+
+.lista-item:hover {
+  border-color: var(--border2);
+  transform: translateX(2px);
+}
+
+/* Barra colorida lateral */
+.lista-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.lista-item.receita::before { background: var(--green); }
+.lista-item.despesa::before { background: var(--red); }
 
 @keyframes entrar {
-  from { opacity: 0; transform: translateY(-8px); }
+  from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
-.lista-item.receita { border-left-color: #4ade80; }
-.lista-item.despesa { border-left-color: #f87171; }
 
 .item-info {
   display: flex;
   flex-direction: column;
   gap: 3px;
+  padding-left: 6px;
 }
 
 .item-descricao {
   font-size: 14px;
-  font-weight: 600;
-  color: #f1f5f9;
+  font-weight: 500;
+  color: var(--text);
 }
 
 .item-categoria {
-  font-size: 12px;
-  color: #64748b;
+  font-size: 11px;
+  color: var(--muted);
   text-transform: capitalize;
+  letter-spacing: 0.3px;
 }
 
 .item-direita {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .item-valor {
-  font-size: 16px;
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
   font-weight: 700;
 }
 
-.item-valor.receita { color: #4ade80; }
-.item-valor.despesa { color: #f87171; }
+.item-valor.receita { color: var(--green); }
+.item-valor.despesa { color: var(--red); }
 
 .btn-deletar {
   background: none;
-  border: none;
-  color: #475569;
+  border: 1px solid transparent;
+  color: var(--muted2);
   cursor: pointer;
-  font-size: 16px;
-  padding: 4px;
-  border-radius: 4px;
-  transition: color 0.2s;
+  font-size: 13px;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
   line-height: 1;
 }
 
-.btn-deletar:hover { color: #f87171; }
+.btn-deletar:hover {
+  color: var(--red);
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.25);
+}
 
 .lista-vazia {
   text-align: center;
-  color: #475569;
+  color: var(--muted);
   font-size: 14px;
-  padding: 24px 0;
+  padding: 32px 0;
+  line-height: 1.7;
 }
 
-/* Responsivo — celular */
-@media (max-width: 500px) {
+.lista-vazia span {
+  display: block;
+  font-size: 28px;
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
+
+
+/* ── 10. FOOTER ── */
+
+.footer {
+  text-align: center;
+  color: var(--muted2);
+  font-size: 12px;
+  padding-top: 8px;
+}
+
+
+/* ── 11. RESPONSIVO ── */
+
+@media (max-width: 480px) {
   .resumo {
     grid-template-columns: 1fr;
   }
@@ -256,5 +500,9 @@ input:focus, select:focus {
 
   .card-valor {
     font-size: 18px;
+  }
+
+  .header h1 {
+    font-size: 28px;
   }
 }
