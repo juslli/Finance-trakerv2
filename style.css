@@ -1,0 +1,260 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0f172a;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 24px 16px;
+}
+
+.app {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 16px 0;
+}
+
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.5px;
+}
+
+.subtitulo {
+  color: #94a3b8;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* Cards de resumo */
+.resumo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.card {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #334155;
+}
+
+.card-label {
+  display: block;
+  font-size: 12px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.card-valor {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.card-saldo .card-valor { color: #f8fafc; }
+.card-receita .card-valor { color: #4ade80; }
+.card-despesa .card-valor { color: #f87171; }
+
+/* Formulário */
+.formulario-container,
+.filtros-container,
+.lista-container {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #334155;
+}
+
+.formulario-container h2,
+.filtros-container h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #f1f5f9;
+}
+
+.formulario {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-size: 12px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+input, select {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #e2e8f0;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+  border-color: #6366f1;
+}
+
+/* Botão adicionar ocupa linha inteira */
+.btn-adicionar {
+  grid-column: 1 / -1;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-adicionar:hover { background: #4f46e5; }
+.btn-adicionar:active { transform: scale(0.98); }
+
+/* Filtros */
+.filtros {
+  display: flex;
+  gap: 8px;
+}
+
+.filtro {
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  padding: 6px 16px;
+  border-radius: 99px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filtro.ativo {
+  background: #6366f1;
+  border-color: #6366f1;
+  color: white;
+}
+
+/* Lista */
+.lista {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lista-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0f172a;
+  border-radius: 8px;
+  padding: 14px 16px;
+  border-left: 4px solid transparent;
+  animation: entrar 0.2s ease;
+}
+
+@keyframes entrar {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.lista-item.receita { border-left-color: #4ade80; }
+.lista-item.despesa { border-left-color: #f87171; }
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.item-descricao {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.item-categoria {
+  font-size: 12px;
+  color: #64748b;
+  text-transform: capitalize;
+}
+
+.item-direita {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.item-valor {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.item-valor.receita { color: #4ade80; }
+.item-valor.despesa { color: #f87171; }
+
+.btn-deletar {
+  background: none;
+  border: none;
+  color: #475569;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.btn-deletar:hover { color: #f87171; }
+
+.lista-vazia {
+  text-align: center;
+  color: #475569;
+  font-size: 14px;
+  padding: 24px 0;
+}
+
+/* Responsivo — celular */
+@media (max-width: 500px) {
+  .resumo {
+    grid-template-columns: 1fr;
+  }
+
+  .formulario {
+    grid-template-columns: 1fr;
+  }
+
+  .card-valor {
+    font-size: 18px;
+  }
+}
