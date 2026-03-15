@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Finance Tracker</title>
+  <title>Finance Tracker | Junio Gianelli</title>
 
   <!-- Fontes -->
   <link
@@ -94,13 +94,13 @@
         <button class="filtro" data-filtro="despesa">Despesas</button>
       </div>
 
-      <!-- Gráfico de categorias (aparece só quando tem despesas) -->
+      <!-- Gráfico (aparece automaticamente quando há despesas) -->
       <div class="grafico-container" id="grafico-container">
         <p class="grafico-titulo">Despesas por categoria</p>
         <canvas id="grafico-categorias"></canvas>
       </div>
 
-      <!-- Lista de transações -->
+      <!-- Lista -->
       <ul class="lista" id="lista-transacoes"></ul>
 
       <!-- Estado vazio -->
@@ -117,7 +117,7 @@
 
   </div>
 
-  <!-- Chart.js via CDN -->
+  <!-- Chart.js — deve vir ANTES do app.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <!-- Lógica da aplicação -->
