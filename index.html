@@ -1,525 +1,127 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Finance Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg:        #08070f;
-      --bg2:       #100e1d;
-      --bg3:       #16132a;
-      --border:    rgba(139,92,246,0.15);
-      --border2:   rgba(139,92,246,0.30);
-      --purple:    #8b5cf6;
-      --purple2:   #a78bfa;
-      --purple3:   #6d28d9;
-      --green:     #34d399;
-      --red:       #f87171;
-      --text:      #f5f3ff;
-      --muted:     #7c6fa0;
-      --muted2:    #4a4166;
-    }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
+  <!-- Fontes -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 32px 16px 60px;
-      background-image:
-        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(109,40,217,0.25) 0%, transparent 70%);
-    }
-
-    .app {
-      max-width: 680px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    /* ── HEADER ── */
-    .header {
-      text-align: center;
-      padding: 20px 0 8px;
-      position: relative;
-    }
-    .header-badge {
-      display: inline-block;
-      font-family: 'Syne', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--purple2);
-      background: rgba(139,92,246,0.1);
-      border: 1px solid var(--border2);
-      border-radius: 99px;
-      padding: 4px 14px;
-      margin-bottom: 12px;
-    }
-    .header h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: 36px;
-      font-weight: 800;
-      background: linear-gradient(135deg, #f5f3ff 0%, var(--purple2) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1.1;
-    }
-    .header p {
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 6px;
-    }
-
-    /* ── CARDS RESUMO ── */
-    .resumo {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    .card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px 16px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.3s, transform 0.2s;
-    }
-    .card:hover {
-      transform: translateY(-2px);
-      border-color: var(--border2);
-    }
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      border-radius: 16px 16px 0 0;
-    }
-    .card-saldo::before   { background: linear-gradient(90deg, var(--purple3), var(--purple2)); }
-    .card-receita::before { background: linear-gradient(90deg, #059669, var(--green)); }
-    .card-despesa::before { background: linear-gradient(90deg, #991b1b, var(--red)); }
-
-    .card-label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-    .card-valor {
-      font-family: 'Syne', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      display: block;
-      transition: color 0.3s;
-    }
-    .card-saldo   .card-valor { color: var(--purple2); }
-    .card-receita .card-valor { color: var(--green); }
-    .card-despesa .card-valor { color: var(--red); }
-
-    /* ── PAINEL ── */
-    .painel {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 24px;
-      transition: border-color 0.3s;
-    }
-    .painel:focus-within {
-      border-color: var(--border2);
-    }
-    .painel-titulo {
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .painel-titulo::before {
-      content: '';
-      display: block;
-      width: 3px;
-      height: 16px;
-      background: var(--purple);
-      border-radius: 99px;
-    }
-
-    /* ── FORMULÁRIO ── */
-    .formulario {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .campo {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    input, select {
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 11px 14px;
-      color: var(--text);
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      outline: none;
-      transition: border-color 0.2s, background 0.2s;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-    select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b5cf6' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 32px;
-    }
-    input::placeholder { color: var(--muted2); }
-    input:focus, select:focus {
-      border-color: var(--purple);
-      background: rgba(139,92,246,0.06);
-    }
-    .btn-adicionar {
-      grid-column: 1 / -1;
-      background: linear-gradient(135deg, var(--purple3) 0%, var(--purple) 100%);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 13px;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: 'Syne', sans-serif;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-      box-shadow: 0 4px 20px rgba(109,40,217,0.35);
-    }
-    .btn-adicionar:hover {
-      opacity: 0.9;
-      box-shadow: 0 4px 28px rgba(109,40,217,0.55);
-    }
-    .btn-adicionar:active { transform: scale(0.98); }
-
-    /* ── FILTROS ── */
-    .filtros {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .filtro {
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 6px 18px;
-      border-radius: 99px;
-      font-size: 13px;
-      font-weight: 500;
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .filtro:hover { border-color: var(--purple); color: var(--purple2); }
-    .filtro.ativo {
-      background: rgba(139,92,246,0.15);
-      border-color: var(--purple);
-      color: var(--purple2);
-      font-weight: 600;
-    }
-
-    /* ── LISTA ── */
-    .lista { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-
-    .lista-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 16px;
-      position: relative;
-      overflow: hidden;
-      animation: entrar 0.25s ease;
-      transition: border-color 0.2s, transform 0.15s;
-    }
-    .lista-item:hover {
-      border-color: var(--border2);
-      transform: translateX(2px);
-    }
-    .lista-item::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      border-radius: 12px 0 0 12px;
-    }
-    .lista-item.receita::before { background: var(--green); }
-    .lista-item.despesa::before { background: var(--red); }
-
-    @keyframes entrar {
-      from { opacity: 0; transform: translateY(-6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .item-info { display: flex; flex-direction: column; gap: 3px; padding-left: 6px; }
-    .item-descricao { font-size: 14px; font-weight: 500; color: var(--text); }
-    .item-categoria {
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: capitalize;
-      letter-spacing: 0.3px;
-    }
-    .item-direita { display: flex; align-items: center; gap: 14px; }
-    .item-valor {
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-    }
-    .item-valor.receita { color: var(--green); }
-    .item-valor.despesa { color: var(--red); }
-
-    .btn-deletar {
-      background: none;
-      border: 1px solid transparent;
-      color: var(--muted2);
-      cursor: pointer;
-      font-size: 13px;
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      line-height: 1;
-    }
-    .btn-deletar:hover {
-      color: var(--red);
-      background: rgba(248,113,113,0.1);
-      border-color: rgba(248,113,113,0.25);
-    }
-
-    .lista-vazia {
-      text-align: center;
-      color: var(--muted);
-      font-size: 14px;
-      padding: 32px 0;
-      line-height: 1.7;
-    }
-    .lista-vazia span {
-      display: block;
-      font-size: 28px;
-      margin-bottom: 8px;
-      opacity: 0.5;
-    }
-
-    /* ── FOOTER ── */
-    .footer {
-      text-align: center;
-      color: var(--muted2);
-      font-size: 12px;
-      padding-top: 8px;
-    }
-
-    /* ── RESPONSIVO ── */
-    @media (max-width: 480px) {
-      .resumo { grid-template-columns: 1fr; }
-      .formulario { grid-template-columns: 1fr; }
-      .card-valor { font-size: 18px; }
-      .header h1 { font-size: 28px; }
-    }
-  </style>
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="app">
 
-  <header class="header">
-    <div class="header-badge">Finance Tracker</div>
-    <h1>Controle Financeiro</h1>
-    <p>Acompanhe suas receitas e despesas em tempo real</p>
-  </header>
+  <div class="app">
 
-  <section class="resumo">
-    <div class="card card-saldo">
-      <span class="card-label">Saldo Atual</span>
-      <span class="card-valor" id="saldo">R$ 0,00</span>
-    </div>
-    <div class="card card-receita">
-      <span class="card-label">Receitas</span>
-      <span class="card-valor" id="total-receitas">R$ 0,00</span>
-    </div>
-    <div class="card card-despesa">
-      <span class="card-label">Despesas</span>
-      <span class="card-valor" id="total-despesas">R$ 0,00</span>
-    </div>
-  </section>
+    <!-- ── HEADER ── -->
+    <header class="header">
+      <div class="header-badge">Finance Tracker</div>
+      <h1>Controle Financeiro</h1>
+      <p>Acompanhe suas receitas e despesas em tempo real</p>
+    </header>
 
-  <section class="painel">
-    <h2 class="painel-titulo">Nova Transação</h2>
-    <div class="formulario">
-      <div class="campo">
-        <label for="descricao">Descrição</label>
-        <input type="text" id="descricao" placeholder="Ex: Salário, Aluguel...">
+    <!-- ── CARDS DE RESUMO ── -->
+    <section class="resumo">
+      <div class="card card-saldo">
+        <span class="card-label">Saldo Atual</span>
+        <span class="card-valor" id="saldo">R$ 0,00</span>
       </div>
-      <div class="campo">
-        <label for="valor">Valor (R$)</label>
-        <input type="number" id="valor" placeholder="0,00" min="0" step="0.01">
+      <div class="card card-receita">
+        <span class="card-label">Receitas</span>
+        <span class="card-valor" id="total-receitas">R$ 0,00</span>
       </div>
-      <div class="campo">
-        <label for="tipo">Tipo</label>
-        <select id="tipo">
-          <option value="receita">Receita</option>
-          <option value="despesa">Despesa</option>
-        </select>
+      <div class="card card-despesa">
+        <span class="card-label">Despesas</span>
+        <span class="card-valor" id="total-despesas">R$ 0,00</span>
       </div>
-      <div class="campo">
-        <label for="categoria">Categoria</label>
-        <select id="categoria">
-          <option value="salario">Salário</option>
-          <option value="alimentacao">Alimentação</option>
-          <option value="moradia">Moradia</option>
-          <option value="transporte">Transporte</option>
-          <option value="saude">Saúde</option>
-          <option value="lazer">Lazer</option>
-          <option value="outros">Outros</option>
-        </select>
-      </div>
-      <button class="btn-adicionar" id="btn-adicionar">+ Adicionar Transação</button>
-    </div>
-  </section>
+    </section>
 
-  <section class="painel">
-    <h2 class="painel-titulo">Transações</h2>
-    <div class="filtros" style="margin-bottom:16px">
-      <button class="filtro ativo" data-filtro="todos">Todos</button>
-      <button class="filtro" data-filtro="receita">Receitas</button>
-      <button class="filtro" data-filtro="despesa">Despesas</button>
-    </div>
-    <ul class="lista" id="lista-transacoes"></ul>
-    <p class="lista-vazia" id="lista-vazia">
-      <span>💸</span>
-      Nenhuma transação ainda.<br>Adicione a primeira acima!
-    </p>
-  </section>
+    <!-- ── FORMULÁRIO ── -->
+    <section class="painel">
+      <h2 class="painel-titulo">Nova Transação</h2>
 
-  <footer class="footer">Finance Tracker · Feito com HTML, CSS e JavaScript</footer>
-
-</div>
-<script>
-  let transacoes = JSON.parse(localStorage.getItem('financas')) || [];
-  let filtroAtivo = 'todos';
-
-  const listaEl      = document.getElementById('lista-transacoes');
-  const listaVaziaEl = document.getElementById('lista-vazia');
-  const saldoEl      = document.getElementById('saldo');
-  const receitasEl   = document.getElementById('total-receitas');
-  const despesasEl   = document.getElementById('total-despesas');
-  const btnAdicionar = document.getElementById('btn-adicionar');
-
-  function formatarMoeda(v) {
-    return new Intl.NumberFormat('pt-BR', { style:'currency', currency:'BRL' }).format(v);
-  }
-
-  function salvar() {
-    localStorage.setItem('financas', JSON.stringify(transacoes));
-  }
-
-  function atualizarResumo() {
-    const receitas = transacoes.filter(t => t.tipo === 'receita').reduce((s,t) => s + t.valor, 0);
-    const despesas = transacoes.filter(t => t.tipo === 'despesa').reduce((s,t) => s + t.valor, 0);
-    const saldo    = receitas - despesas;
-    saldoEl.textContent    = formatarMoeda(saldo);
-    receitasEl.textContent = formatarMoeda(receitas);
-    despesasEl.textContent = formatarMoeda(despesas);
-    saldoEl.style.color    = saldo < 0 ? 'var(--red)' : 'var(--purple2)';
-  }
-
-  function renderizarLista() {
-    listaEl.innerHTML = '';
-    const filtradas = filtroAtivo === 'todos'
-      ? transacoes
-      : transacoes.filter(t => t.tipo === filtroAtivo);
-
-    if (filtradas.length === 0) {
-      listaVaziaEl.style.display = 'block';
-      return;
-    }
-    listaVaziaEl.style.display = 'none';
-
-    [...filtradas].reverse().forEach(t => {
-      const sinal = t.tipo === 'receita' ? '+' : '-';
-      const li = document.createElement('li');
-      li.classList.add('lista-item', t.tipo);
-      li.innerHTML = `
-        <div class="item-info">
-          <span class="item-descricao">${t.descricao}</span>
-          <span class="item-categoria">${t.categoria}</span>
+      <div class="formulario">
+        <div class="campo">
+          <label for="descricao">Descrição</label>
+          <input type="text" id="descricao" placeholder="Ex: Salário, Aluguel..." />
         </div>
-        <div class="item-direita">
-          <span class="item-valor ${t.tipo}">${sinal} ${formatarMoeda(t.valor)}</span>
-          <button class="btn-deletar" data-id="${t.id}" title="Remover">✕</button>
-        </div>`;
-      listaEl.appendChild(li);
-    });
-  }
 
-  function atualizar() { atualizarResumo(); renderizarLista(); }
+        <div class="campo">
+          <label for="valor">Valor (R$)</label>
+          <input type="number" id="valor" placeholder="0,00" min="0" step="0.01" />
+        </div>
 
-  btnAdicionar.addEventListener('click', () => {
-    const descricao = document.getElementById('descricao').value.trim();
-    const valor     = parseFloat(document.getElementById('valor').value);
-    const tipo      = document.getElementById('tipo').value;
-    const categoria = document.getElementById('categoria').value;
-    if (!descricao) { alert('Adicione uma descrição.'); return; }
-    if (!valor || valor <= 0) { alert('Insira um valor válido.'); return; }
-    transacoes.push({ id: Date.now(), descricao, valor, tipo, categoria });
-    salvar();
-    atualizar();
-    document.getElementById('descricao').value = '';
-    document.getElementById('valor').value = '';
-  });
+        <div class="campo">
+          <label for="tipo">Tipo</label>
+          <select id="tipo">
+            <option value="receita">Receita</option>
+            <option value="despesa">Despesa</option>
+          </select>
+        </div>
 
-  listaEl.addEventListener('click', e => {
-    if (e.target.classList.contains('btn-deletar')) {
-      const id = Number(e.target.dataset.id);
-      transacoes = transacoes.filter(t => t.id !== id);
-      salvar();
-      atualizar();
-    }
-  });
+        <div class="campo">
+          <label for="categoria">Categoria</label>
+          <select id="categoria">
+            <option value="salario">Salário</option>
+            <option value="alimentacao">Alimentação</option>
+            <option value="moradia">Moradia</option>
+            <option value="transporte">Transporte</option>
+            <option value="saude">Saúde</option>
+            <option value="lazer">Lazer</option>
+            <option value="outros">Outros</option>
+          </select>
+        </div>
 
-  document.querySelectorAll('.filtro').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filtro').forEach(b => b.classList.remove('ativo'));
-      btn.classList.add('ativo');
-      filtroAtivo = btn.dataset.filtro;
-      renderizarLista();
-    });
-  });
+        <button class="btn-adicionar" id="btn-adicionar">
+          + Adicionar Transação
+        </button>
+      </div>
+    </section>
 
-  atualizar();
-</script>
+    <!-- ── TRANSAÇÕES ── -->
+    <section class="painel">
+      <h2 class="painel-titulo">Transações</h2>
+
+      <!-- Filtros -->
+      <div class="filtros">
+        <button class="filtro ativo" data-filtro="todos">Todos</button>
+        <button class="filtro" data-filtro="receita">Receitas</button>
+        <button class="filtro" data-filtro="despesa">Despesas</button>
+      </div>
+
+      <!-- Gráfico de categorias (aparece só quando tem despesas) -->
+      <div class="grafico-container" id="grafico-container">
+        <p class="grafico-titulo">Despesas por categoria</p>
+        <canvas id="grafico-categorias"></canvas>
+      </div>
+
+      <!-- Lista de transações -->
+      <ul class="lista" id="lista-transacoes"></ul>
+
+      <!-- Estado vazio -->
+      <p class="lista-vazia" id="lista-vazia">
+        <span>💸</span>
+        Nenhuma transação ainda.<br />Adicione a primeira acima!
+      </p>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer class="footer">
+      Finance Tracker · Feito com HTML, CSS e JavaScript
+    </footer>
+
+  </div>
+
+  <!-- Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Lógica da aplicação -->
+  <script src="app.js"></script>
+
 </body>
 </html>
