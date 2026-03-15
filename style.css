@@ -506,3 +506,10 @@ select:focus {
     font-size: 28px;
   }
 }
+/* Mensagem de erro inline */
+.erro-msg {
+  font-size: 11px;
+  color: var(--red);
+  margin-top: 2px;
+  animation: entrar 0.2s ease;
+}
