@@ -9,9 +9,9 @@ Aplicação de controle financeiro pessoal com dashboard em tempo real.
 - Adicionar receitas e despesas por categoria
 - Saldo calculado automaticamente em tempo real
 - Gráfico de rosca com despesas por categoria (Chart.js)
-- Filtros por tipo de transação
-- Validação de formulário inline
-- Dados salvos no navegador (localStorage)
+- Filtros por tipo de transação (todos, receitas, despesas)
+- Validação de formulário inline sem alert()
+- Dados salvos no navegador com localStorage
 - Interface responsiva para mobile
 
 ## Tecnologias
@@ -23,7 +23,7 @@ Aplicação de controle financeiro pessoal com dashboard em tempo real.
 
 ## Acesse o projeto
 
-[Finance Tracker ao vivo](https://juslli.github.io/Finance-trakerv2/)
+🔗 [Finance Tracker ao vivo](https://juslli.github.io/Finance-trakerv2/)
 
 ---
 

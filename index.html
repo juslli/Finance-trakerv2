@@ -1,127 +1,134 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Finance Tracker | Junio Gianelli</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Tracker | Junio Gianelli</title>
 
-  <!-- Fontes -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
-    rel="stylesheet"
-  />
+    <!-- Fontes -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Estilos -->
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+    <!-- Estilos -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- ── HEADER ── -->
+      <header class="header">
+        <div class="header-badge">Finance Tracker</div>
+        <h1>Controle Financeiro</h1>
+        <p>Acompanhe suas receitas e despesas em tempo real</p>
+      </header>
 
-  <div class="app">
+      <!-- ── CARDS DE RESUMO ── -->
+      <section class="resumo">
+        <div class="card card-saldo">
+          <span class="card-label">Saldo Atual</span>
+          <span class="card-valor" id="saldo">R$ 0,00</span>
+        </div>
+        <div class="card card-receita">
+          <span class="card-label">Receitas</span>
+          <span class="card-valor" id="total-receitas">R$ 0,00</span>
+        </div>
+        <div class="card card-despesa">
+          <span class="card-label">Despesas</span>
+          <span class="card-valor" id="total-despesas">R$ 0,00</span>
+        </div>
+      </section>
 
-    <!-- ── HEADER ── -->
-    <header class="header">
-      <div class="header-badge">Finance Tracker</div>
-      <h1>Controle Financeiro</h1>
-      <p>Acompanhe suas receitas e despesas em tempo real</p>
-    </header>
+      <!-- ── FORMULÁRIO ── -->
+      <section class="painel">
+        <h2 class="painel-titulo">Nova Transação</h2>
 
-    <!-- ── CARDS DE RESUMO ── -->
-    <section class="resumo">
-      <div class="card card-saldo">
-        <span class="card-label">Saldo Atual</span>
-        <span class="card-valor" id="saldo">R$ 0,00</span>
-      </div>
-      <div class="card card-receita">
-        <span class="card-label">Receitas</span>
-        <span class="card-valor" id="total-receitas">R$ 0,00</span>
-      </div>
-      <div class="card card-despesa">
-        <span class="card-label">Despesas</span>
-        <span class="card-valor" id="total-despesas">R$ 0,00</span>
-      </div>
-    </section>
+        <div class="formulario">
+          <div class="campo">
+            <label for="descricao">Descrição</label>
+            <input
+              type="text"
+              id="descricao"
+              placeholder="Ex: Salário, Aluguel..."
+              autocomplete="off"
+            />
+          </div>
 
-    <!-- ── FORMULÁRIO ── -->
-    <section class="painel">
-      <h2 class="painel-titulo">Nova Transação</h2>
+          <div class="campo">
+            <label for="valor">Valor (R$)</label>
+            <input
+              type="number"
+              id="valor"
+              placeholder="0,00"
+              min="0"
+              step="0.01"
+            />
+          </div>
 
-      <div class="formulario">
-        <div class="campo">
-          <label for="descricao">Descrição</label>
-          <input type="text" id="descricao" placeholder="Ex: Salário, Aluguel..." />
+          <div class="campo">
+            <label for="tipo">Tipo</label>
+            <select id="tipo">
+              <option value="receita">Receita</option>
+              <option value="despesa">Despesa</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="categoria">Categoria</label>
+            <select id="categoria">
+              <option value="salario">Salário</option>
+              <option value="alimentacao">Alimentação</option>
+              <option value="moradia">Moradia</option>
+              <option value="transporte">Transporte</option>
+              <option value="saude">Saúde</option>
+              <option value="lazer">Lazer</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+
+          <button class="btn-adicionar" id="btn-adicionar">
+            + Adicionar Transação
+          </button>
+        </div>
+      </section>
+
+      <!-- ── TRANSAÇÕES ── -->
+      <section class="painel">
+        <h2 class="painel-titulo">Transações</h2>
+
+        <!-- Filtros -->
+        <div class="filtros">
+          <button class="filtro ativo" data-filtro="todos">Todos</button>
+          <button class="filtro" data-filtro="receita">Receitas</button>
+          <button class="filtro" data-filtro="despesa">Despesas</button>
         </div>
 
-        <div class="campo">
-          <label for="valor">Valor (R$)</label>
-          <input type="number" id="valor" placeholder="0,00" min="0" step="0.01" />
+        <!-- Gráfico (aparece automaticamente quando há despesas) -->
+        <div class="grafico-container" id="grafico-container">
+          <p class="grafico-titulo">Despesas por categoria</p>
+          <canvas id="grafico-categorias"></canvas>
         </div>
 
-        <div class="campo">
-          <label for="tipo">Tipo</label>
-          <select id="tipo">
-            <option value="receita">Receita</option>
-            <option value="despesa">Despesa</option>
-          </select>
-        </div>
+        <!-- Lista -->
+        <ul class="lista" id="lista-transacoes"></ul>
 
-        <div class="campo">
-          <label for="categoria">Categoria</label>
-          <select id="categoria">
-            <option value="salario">Salário</option>
-            <option value="alimentacao">Alimentação</option>
-            <option value="moradia">Moradia</option>
-            <option value="transporte">Transporte</option>
-            <option value="saude">Saúde</option>
-            <option value="lazer">Lazer</option>
-            <option value="outros">Outros</option>
-          </select>
-        </div>
+        <!-- Estado vazio -->
+        <p class="lista-vazia" id="lista-vazia">
+          <span>💸</span>
+          Nenhuma transação ainda.<br />Adicione a primeira acima!
+        </p>
+      </section>
 
-        <button class="btn-adicionar" id="btn-adicionar">
-          + Adicionar Transação
-        </button>
-      </div>
-    </section>
+      <!-- ── FOOTER ── -->
+      <footer class="footer">
+        Finance Tracker · Feito com HTML, CSS e JavaScript
+      </footer>
+    </div>
 
-    <!-- ── TRANSAÇÕES ── -->
-    <section class="painel">
-      <h2 class="painel-titulo">Transações</h2>
+    <!-- Chart.js — deve vir ANTES do app.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-      <!-- Filtros -->
-      <div class="filtros">
-        <button class="filtro ativo" data-filtro="todos">Todos</button>
-        <button class="filtro" data-filtro="receita">Receitas</button>
-        <button class="filtro" data-filtro="despesa">Despesas</button>
-      </div>
-
-      <!-- Gráfico (aparece automaticamente quando há despesas) -->
-      <div class="grafico-container" id="grafico-container">
-        <p class="grafico-titulo">Despesas por categoria</p>
-        <canvas id="grafico-categorias"></canvas>
-      </div>
-
-      <!-- Lista -->
-      <ul class="lista" id="lista-transacoes"></ul>
-
-      <!-- Estado vazio -->
-      <p class="lista-vazia" id="lista-vazia">
-        <span>💸</span>
-        Nenhuma transação ainda.<br />Adicione a primeira acima!
-      </p>
-    </section>
-
-    <!-- ── FOOTER ── -->
-    <footer class="footer">
-      Finance Tracker · Feito com HTML, CSS e JavaScript
-    </footer>
-
-  </div>
-
-  <!-- Chart.js — deve vir ANTES do app.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- Lógica da aplicação -->
-  <script src="app.js"></script>
-
-</body>
+    <!-- Lógica da aplicação -->
+    <script src="app.js"></script>
+  </body>
 </html>

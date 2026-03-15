@@ -1,515 +1,330 @@
 /* ============================================================
-   FINANCE TRACKER — style.css
-   Tema: Dark + Roxo
+   FINANCE TRACKER — app.js
    Seções:
-     1. Variáveis e Reset
-     2. Layout base
-     3. Header
-     4. Cards de resumo
-     5. Painel (container genérico)
-     6. Formulário
-     7. Validação inline
-     8. Filtros
-     9. Gráfico
-    10. Lista de transações
-    11. Footer
-    12. Responsivo
+     1. Estado e variáveis
+     2. Referências ao DOM
+     3. Utilitários
+     4. Persistência (localStorage)
+     5. Validação inline
+     6. Resumo (saldo, receitas, despesas)
+     7. Gráfico (Chart.js)
+     8. Lista de transações
+     9. Renderização geral
+    10. Eventos
+    11. Inicialização
 ============================================================ */
 
+/* ── 1. ESTADO E VARIÁVEIS ── */
 
-/* ── 1. VARIÁVEIS E RESET ── */
+let transacoes = JSON.parse(localStorage.getItem("financas")) || [];
+let filtroAtivo = "todos";
+let grafico = null;
 
-:root {
-  --bg:       #08070f;
-  --bg2:      #100e1d;
-  --bg3:      #16132a;
+const CORES_GRAFICO = [
+  "#8b5cf6",
+  "#a78bfa",
+  "#6d28d9",
+  "#34d399",
+  "#f87171",
+  "#fbbf24",
+  "#60a5fa",
+];
 
-  --border:   rgba(139, 92, 246, 0.15);
-  --border2:  rgba(139, 92, 246, 0.30);
+/* ── 2. REFERÊNCIAS AO DOM ── */
 
-  --purple:   #8b5cf6;
-  --purple2:  #a78bfa;
-  --purple3:  #6d28d9;
+const listaEl = document.getElementById("lista-transacoes");
+const listaVaziaEl = document.getElementById("lista-vazia");
+const saldoEl = document.getElementById("saldo");
+const receitasEl = document.getElementById("total-receitas");
+const despesasEl = document.getElementById("total-despesas");
+const btnAdicionarEl = document.getElementById("btn-adicionar");
+const descricaoEl = document.getElementById("descricao");
+const valorEl = document.getElementById("valor");
+const tipoEl = document.getElementById("tipo");
+const categoriaEl = document.getElementById("categoria");
+const graficoContEl = document.getElementById("grafico-container");
+const graficoCanvasEl = document.getElementById("grafico-categorias");
 
-  --green:    #34d399;
-  --red:      #f87171;
-  --yellow:   #fbbf24;
-  --blue:     #60a5fa;
+/* ── 3. UTILITÁRIOS ── */
 
-  --text:     #f5f3ff;
-  --muted:    #7c6fa0;
-  --muted2:   #4a4166;
-
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+// Formata número para moeda brasileira: 1250 → R$ 1.250,00
+function formatarMoeda(valor) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(valor);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+// Capitaliza primeira letra: "alimentacao" → "Alimentacao"
+function capitalizar(texto) {
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
 }
 
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  background-image: radial-gradient(
-    ellipse 80% 50% at 50% -10%,
-    rgba(109, 40, 217, 0.25) 0%,
-    transparent 70%
-  );
-  color: var(--text);
-  min-height: 100vh;
-  padding: 32px 16px 60px;
+// Gera ID único baseado no timestamp atual
+function gerarId() {
+  return Date.now();
 }
 
+/* ── 4. PERSISTÊNCIA (localStorage) ── */
 
-/* ── 2. LAYOUT BASE ── */
-
-.app {
-  max-width: 680px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+// Salva o array de transações no navegador
+// Os dados persistem mesmo fechando o navegador
+function salvar() {
+  localStorage.setItem("financas", JSON.stringify(transacoes));
 }
 
+/* ── 5. VALIDAÇÃO INLINE ── */
 
-/* ── 3. HEADER ── */
+// Exibe mensagem de erro embaixo do campo, sem usar alert()
+function mostrarErro(el, mensagem) {
+  const anterior = el.parentElement.querySelector(".erro-msg");
+  if (anterior) anterior.remove();
 
-.header {
-  text-align: center;
-  padding: 20px 0 8px;
+  const msg = document.createElement("span");
+  msg.classList.add("erro-msg");
+  msg.textContent = mensagem;
+  el.parentElement.appendChild(msg);
+
+  // Borda vermelha no campo com problema
+  el.style.borderColor = "var(--red)";
+
+  // Remove automaticamente após 3 segundos
+  setTimeout(() => {
+    msg.remove();
+    el.style.borderColor = "";
+  }, 3000);
 }
 
-.header-badge {
-  display: inline-block;
-  font-family: 'Syne', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--purple2);
-  background: rgba(139, 92, 246, 0.1);
-  border: 1px solid var(--border2);
-  border-radius: 99px;
-  padding: 4px 14px;
-  margin-bottom: 12px;
+// Remove erro quando o usuário começa a digitar
+function limparErro(el) {
+  const erro = el.parentElement.querySelector(".erro-msg");
+  if (erro) erro.remove();
+  el.style.borderColor = "";
 }
 
-.header h1 {
-  font-family: 'Syne', sans-serif;
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 1.1;
-  background: linear-gradient(135deg, #f5f3ff 0%, var(--purple2) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* ── 6. RESUMO ── */
+
+// Recalcula e atualiza os 3 cards do topo
+function atualizarResumo() {
+  const totalReceitas = transacoes
+    .filter((t) => t.tipo === "receita")
+    .reduce((soma, t) => soma + t.valor, 0);
+
+  const totalDespesas = transacoes
+    .filter((t) => t.tipo === "despesa")
+    .reduce((soma, t) => soma + t.valor, 0);
+
+  const saldo = totalReceitas - totalDespesas;
+
+  saldoEl.textContent = formatarMoeda(saldo);
+  receitasEl.textContent = formatarMoeda(totalReceitas);
+  despesasEl.textContent = formatarMoeda(totalDespesas);
+
+  // Saldo fica vermelho quando negativo
+  saldoEl.style.color = saldo < 0 ? "var(--red)" : "var(--purple2)";
 }
 
-.header p {
-  color: var(--muted);
-  font-size: 14px;
-  margin-top: 6px;
+/* ── 7. GRÁFICO (Chart.js) ── */
+
+// Agrupa despesas por categoria e retorna labels + valores
+function calcularDespesasPorCategoria() {
+  const agrupado = {};
+
+  transacoes
+    .filter((t) => t.tipo === "despesa")
+    .forEach((t) => {
+      agrupado[t.categoria] = (agrupado[t.categoria] || 0) + t.valor;
+    });
+
+  return {
+    labels: Object.keys(agrupado).map(capitalizar),
+    valores: Object.values(agrupado),
+  };
 }
 
-
-/* ── 4. CARDS DE RESUMO ── */
-
-.resumo {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-.card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 20px 16px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.3s, transform 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  border-color: var(--border2);
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-}
-
-.card-saldo::before   { background: linear-gradient(90deg, var(--purple3), var(--purple2)); }
-.card-receita::before { background: linear-gradient(90deg, #059669, var(--green)); }
-.card-despesa::before { background: linear-gradient(90deg, #991b1b, var(--red)); }
-
-.card-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 10px;
-}
-
-.card-valor {
-  font-family: 'Syne', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  display: block;
-  transition: color 0.3s;
-}
-
-.card-saldo   .card-valor { color: var(--purple2); }
-.card-receita .card-valor { color: var(--green); }
-.card-despesa .card-valor { color: var(--red); }
-
-
-/* ── 5. PAINEL (container genérico) ── */
-
-.painel {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 24px;
-  transition: border-color 0.3s;
-}
-
-.painel:focus-within {
-  border-color: var(--border2);
-}
-
-.painel-titulo {
-  font-family: 'Syne', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.painel-titulo::before {
-  content: '';
-  display: block;
-  width: 3px;
-  height: 16px;
-  background: var(--purple);
-  border-radius: 99px;
-  flex-shrink: 0;
-}
-
-
-/* ── 6. FORMULÁRIO ── */
-
-.formulario {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.campo {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-input,
-select {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 11px 14px;
-  color: var(--text);
-  font-size: 14px;
-  font-family: 'DM Sans', sans-serif;
-  outline: none;
-  transition: border-color 0.2s, background 0.2s;
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b5cf6' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 32px;
-}
-
-input::placeholder {
-  color: var(--muted2);
-}
-
-input:focus,
-select:focus {
-  border-color: var(--purple);
-  background: rgba(139, 92, 246, 0.06);
-}
-
-.btn-adicionar {
-  grid-column: 1 / -1;
-  background: linear-gradient(135deg, var(--purple3) 0%, var(--purple) 100%);
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 13px;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: 'Syne', sans-serif;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(109, 40, 217, 0.35);
-  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-}
-
-.btn-adicionar:hover {
-  opacity: 0.9;
-  box-shadow: 0 4px 28px rgba(109, 40, 217, 0.55);
-}
-
-.btn-adicionar:active {
-  transform: scale(0.98);
-}
-
-
-/* ── 7. VALIDAÇÃO INLINE ── */
-
-.erro-msg {
-  font-size: 11px;
-  color: var(--red);
-  margin-top: 2px;
-  animation: entrar 0.2s ease;
-}
-
-
-/* ── 8. FILTROS ── */
-
-.filtros {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-.filtro {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  color: var(--muted);
-  padding: 6px 18px;
-  border-radius: 99px;
-  font-size: 13px;
-  font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.filtro:hover {
-  border-color: var(--purple);
-  color: var(--purple2);
-}
-
-.filtro.ativo {
-  background: rgba(139, 92, 246, 0.15);
-  border-color: var(--purple);
-  color: var(--purple2);
-  font-weight: 600;
-}
-
-
-/* ── 9. GRÁFICO ── */
-
-.grafico-container {
-  display: none;
-  margin-bottom: 24px;
-  padding: 20px;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-}
-
-.grafico-titulo {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 16px;
-  text-align: center;
-}
-
-.grafico-container canvas {
-  max-height: 220px;
-}
-
-
-/* ── 10. LISTA DE TRANSAÇÕES ── */
-
-.lista {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.lista-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  position: relative;
-  overflow: hidden;
-  animation: entrar 0.25s ease;
-  transition: border-color 0.2s, transform 0.15s;
-}
-
-.lista-item:hover {
-  border-color: var(--border2);
-  transform: translateX(2px);
-}
-
-.lista-item::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  border-radius: var(--radius-md) 0 0 var(--radius-md);
-}
-
-.lista-item.receita::before { background: var(--green); }
-.lista-item.despesa::before { background: var(--red); }
-
-@keyframes entrar {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.item-info {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding-left: 6px;
-}
-
-.item-descricao {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text);
-}
-
-.item-categoria {
-  font-size: 11px;
-  color: var(--muted);
-  text-transform: capitalize;
-  letter-spacing: 0.3px;
-}
-
-.item-direita {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.item-valor {
-  font-family: 'Syne', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.item-valor.receita { color: var(--green); }
-.item-valor.despesa { color: var(--red); }
-
-.btn-deletar {
-  background: none;
-  border: 1px solid transparent;
-  color: var(--muted2);
-  cursor: pointer;
-  font-size: 13px;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  line-height: 1;
-}
-
-.btn-deletar:hover {
-  color: var(--red);
-  background: rgba(248, 113, 113, 0.1);
-  border-color: rgba(248, 113, 113, 0.25);
-}
-
-.lista-vazia {
-  text-align: center;
-  color: var(--muted);
-  font-size: 14px;
-  padding: 32px 0;
-  line-height: 1.7;
-}
-
-.lista-vazia span {
-  display: block;
-  font-size: 28px;
-  margin-bottom: 8px;
-  opacity: 0.5;
-}
-
-
-/* ── 11. FOOTER ── */
-
-.footer {
-  text-align: center;
-  color: var(--muted2);
-  font-size: 12px;
-  padding-top: 8px;
-}
-
-
-/* ── 12. RESPONSIVO ── */
-
-@media (max-width: 480px) {
-  .resumo {
-    grid-template-columns: 1fr;
+// Cria ou atualiza o gráfico de rosca
+function atualizarGrafico() {
+  const despesas = transacoes.filter((t) => t.tipo === "despesa");
+
+  // Sem despesas → esconde o gráfico
+  if (despesas.length === 0) {
+    graficoContEl.style.display = "none";
+    return;
   }
 
-  .formulario {
-    grid-template-columns: 1fr;
+  const { labels, valores } = calcularDespesasPorCategoria();
+
+  // Destrói instância anterior para evitar conflito no canvas
+  if (grafico) {
+    grafico.destroy();
   }
 
-  .card-valor {
-    font-size: 18px;
-  }
+  graficoContEl.style.display = "block";
 
-  .header h1 {
-    font-size: 28px;
-  }
+  grafico = new Chart(graficoCanvasEl, {
+    type: "doughnut",
+    data: {
+      labels,
+      datasets: [
+        {
+          data: valores,
+          backgroundColor: CORES_GRAFICO.slice(0, labels.length),
+          borderWidth: 0,
+          hoverOffset: 8,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      cutout: "65%",
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: {
+            color: "#7c6fa0",
+            font: { size: 12, family: "DM Sans" },
+            padding: 16,
+            usePointStyle: true,
+            pointStyleWidth: 8,
+          },
+        },
+        tooltip: {
+          callbacks: {
+            // Formata o valor no tooltip como R$
+            label: (context) => " " + formatarMoeda(context.parsed),
+          },
+        },
+      },
+    },
+  });
 }
+
+/* ── 8. LISTA DE TRANSAÇÕES ── */
+
+// Cria o elemento <li> de uma transação
+function criarItemLista(transacao) {
+  const sinal = transacao.tipo === "receita" ? "+" : "-";
+
+  const li = document.createElement("li");
+  li.classList.add("lista-item", transacao.tipo);
+  li.innerHTML = `
+    <div class="item-info">
+      <span class="item-descricao">${transacao.descricao}</span>
+      <span class="item-categoria">${capitalizar(transacao.categoria)}</span>
+    </div>
+    <div class="item-direita">
+      <span class="item-valor ${transacao.tipo}">
+        ${sinal} ${formatarMoeda(transacao.valor)}
+      </span>
+      <button class="btn-deletar" data-id="${transacao.id}" title="Remover transação">
+        ✕
+      </button>
+    </div>
+  `;
+
+  return li;
+}
+
+// Renderiza a lista completa respeitando o filtro ativo
+function renderizarLista() {
+  listaEl.innerHTML = "";
+
+  const transacoesFiltradas =
+    filtroAtivo === "todos"
+      ? transacoes
+      : transacoes.filter((t) => t.tipo === filtroAtivo);
+
+  if (transacoesFiltradas.length === 0) {
+    listaVaziaEl.style.display = "block";
+    return;
+  }
+
+  listaVaziaEl.style.display = "none";
+
+  // Exibe da mais recente para a mais antiga
+  [...transacoesFiltradas]
+    .reverse()
+    .forEach((t) => listaEl.appendChild(criarItemLista(t)));
+}
+
+/* ── 9. RENDERIZAÇÃO GERAL ── */
+
+// Atualiza tudo de uma vez — chamada sempre que os dados mudam
+function atualizar() {
+  atualizarResumo();
+  atualizarGrafico();
+  renderizarLista();
+}
+
+/* ── 10. EVENTOS ── */
+
+// Adicionar transação
+btnAdicionarEl.addEventListener("click", () => {
+  const descricao = descricaoEl.value.trim();
+  const valor = parseFloat(valorEl.value);
+  const tipo = tipoEl.value;
+  const categoria = categoriaEl.value;
+
+  // Valida os campos — mostra erro inline sem alert()
+  let valido = true;
+
+  if (!descricao) {
+    mostrarErro(descricaoEl, "Adicione uma descrição");
+    valido = false;
+  }
+
+  if (!valor || valor <= 0) {
+    mostrarErro(valorEl, "Insira um valor válido");
+    valido = false;
+  }
+
+  if (!valido) return;
+
+  transacoes.push({ id: gerarId(), descricao, valor, tipo, categoria });
+  salvar();
+  atualizar();
+
+  // Limpa os campos e devolve o foco para descrição
+  descricaoEl.value = "";
+  valorEl.value = "";
+  descricaoEl.focus();
+});
+
+// Limpa o erro quando o usuário começa a corrigir o campo
+descricaoEl.addEventListener("input", () => limparErro(descricaoEl));
+valorEl.addEventListener("input", () => limparErro(valorEl));
+
+// Adicionar com Enter nos campos de descrição e valor
+[descricaoEl, valorEl].forEach((el) => {
+  el.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") btnAdicionarEl.click();
+  });
+});
+
+// Deletar transação via delegação de evento na lista
+// (funciona para elementos criados dinamicamente)
+listaEl.addEventListener("click", (e) => {
+  if (!e.target.classList.contains("btn-deletar")) return;
+
+  const id = Number(e.target.dataset.id);
+  transacoes = transacoes.filter((t) => t.id !== id);
+  salvar();
+  atualizar();
+});
+
+// Botões de filtro
+document.querySelectorAll(".filtro").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document
+      .querySelectorAll(".filtro")
+      .forEach((b) => b.classList.remove("ativo"));
+    btn.classList.add("ativo");
+    filtroAtivo = btn.dataset.filtro;
+    renderizarLista();
+  });
+});
+
+/* ── 11. INICIALIZAÇÃO ── */
+
+// Renderiza os dados salvos no localStorage ao carregar a página
+atualizar();

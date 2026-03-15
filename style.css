@@ -16,29 +16,28 @@
     12. Responsivo
 ============================================================ */
 
-
 /* ── 1. VARIÁVEIS E RESET ── */
 
 :root {
-  --bg:       #08070f;
-  --bg2:      #100e1d;
-  --bg3:      #16132a;
+  --bg: #08070f;
+  --bg2: #100e1d;
+  --bg3: #16132a;
 
-  --border:   rgba(139, 92, 246, 0.15);
-  --border2:  rgba(139, 92, 246, 0.30);
+  --border: rgba(139, 92, 246, 0.15);
+  --border2: rgba(139, 92, 246, 0.3);
 
-  --purple:   #8b5cf6;
-  --purple2:  #a78bfa;
-  --purple3:  #6d28d9;
+  --purple: #8b5cf6;
+  --purple2: #a78bfa;
+  --purple3: #6d28d9;
 
-  --green:    #34d399;
-  --red:      #f87171;
-  --yellow:   #fbbf24;
-  --blue:     #60a5fa;
+  --green: #34d399;
+  --red: #f87171;
+  --yellow: #fbbf24;
+  --blue: #60a5fa;
 
-  --text:     #f5f3ff;
-  --muted:    #7c6fa0;
-  --muted2:   #4a4166;
+  --text: #f5f3ff;
+  --muted: #7c6fa0;
+  --muted2: #4a4166;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -53,7 +52,7 @@
 }
 
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   background: var(--bg);
   background-image: radial-gradient(
     ellipse 80% 50% at 50% -10%,
@@ -65,7 +64,6 @@ body {
   padding: 32px 16px 60px;
 }
 
-
 /* ── 2. LAYOUT BASE ── */
 
 .app {
@@ -76,7 +74,6 @@ body {
   gap: 20px;
 }
 
-
 /* ── 3. HEADER ── */
 
 .header {
@@ -86,7 +83,7 @@ body {
 
 .header-badge {
   display: inline-block;
-  font-family: 'Syne', sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 2px;
@@ -100,7 +97,7 @@ body {
 }
 
 .header h1 {
-  font-family: 'Syne', sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 36px;
   font-weight: 800;
   line-height: 1.1;
@@ -115,7 +112,6 @@ body {
   font-size: 14px;
   margin-top: 6px;
 }
-
 
 /* ── 4. CARDS DE RESUMO ── */
 
@@ -133,7 +129,9 @@ body {
   text-align: center;
   position: relative;
   overflow: hidden;
-  transition: border-color 0.3s, transform 0.2s;
+  transition:
+    border-color 0.3s,
+    transform 0.2s;
 }
 
 .card:hover {
@@ -142,7 +140,7 @@ body {
 }
 
 .card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -151,9 +149,15 @@ body {
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
-.card-saldo::before   { background: linear-gradient(90deg, var(--purple3), var(--purple2)); }
-.card-receita::before { background: linear-gradient(90deg, #059669, var(--green)); }
-.card-despesa::before { background: linear-gradient(90deg, #991b1b, var(--red)); }
+.card-saldo::before {
+  background: linear-gradient(90deg, var(--purple3), var(--purple2));
+}
+.card-receita::before {
+  background: linear-gradient(90deg, #059669, var(--green));
+}
+.card-despesa::before {
+  background: linear-gradient(90deg, #991b1b, var(--red));
+}
 
 .card-label {
   display: block;
@@ -166,17 +170,22 @@ body {
 }
 
 .card-valor {
-  font-family: 'Syne', sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 20px;
   font-weight: 700;
   display: block;
   transition: color 0.3s;
 }
 
-.card-saldo   .card-valor { color: var(--purple2); }
-.card-receita .card-valor { color: var(--green); }
-.card-despesa .card-valor { color: var(--red); }
-
+.card-saldo .card-valor {
+  color: var(--purple2);
+}
+.card-receita .card-valor {
+  color: var(--green);
+}
+.card-despesa .card-valor {
+  color: var(--red);
+}
 
 /* ── 5. PAINEL (container genérico) ── */
 
@@ -193,7 +202,7 @@ body {
 }
 
 .painel-titulo {
-  font-family: 'Syne', sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 15px;
   font-weight: 700;
   color: var(--text);
@@ -204,7 +213,7 @@ body {
 }
 
 .painel-titulo::before {
-  content: '';
+  content: "";
   display: block;
   width: 3px;
   height: 16px;
@@ -212,7 +221,6 @@ body {
   border-radius: 99px;
   flex-shrink: 0;
 }
-
 
 /* ── 6. FORMULÁRIO ── */
 
@@ -244,9 +252,11 @@ select {
   padding: 11px 14px;
   color: var(--text);
   font-size: 14px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   outline: none;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
   appearance: none;
   -webkit-appearance: none;
 }
@@ -277,11 +287,14 @@ select:focus {
   padding: 13px;
   font-size: 14px;
   font-weight: 600;
-  font-family: 'Syne', sans-serif;
+  font-family: "Syne", sans-serif;
   letter-spacing: 0.5px;
   cursor: pointer;
   box-shadow: 0 4px 20px rgba(109, 40, 217, 0.35);
-  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.15s,
+    box-shadow 0.2s;
 }
 
 .btn-adicionar:hover {
@@ -293,7 +306,6 @@ select:focus {
   transform: scale(0.98);
 }
 
-
 /* ── 7. VALIDAÇÃO INLINE ── */
 
 .erro-msg {
@@ -302,7 +314,6 @@ select:focus {
   margin-top: 2px;
   animation: entrar 0.2s ease;
 }
-
 
 /* ── 8. FILTROS ── */
 
@@ -321,7 +332,7 @@ select:focus {
   border-radius: 99px;
   font-size: 13px;
   font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -337,7 +348,6 @@ select:focus {
   color: var(--purple2);
   font-weight: 600;
 }
-
 
 /* ── 9. GRÁFICO ── */
 
@@ -364,7 +374,6 @@ select:focus {
   max-height: 220px;
 }
 
-
 /* ── 10. LISTA DE TRANSAÇÕES ── */
 
 .lista {
@@ -385,7 +394,9 @@ select:focus {
   position: relative;
   overflow: hidden;
   animation: entrar 0.25s ease;
-  transition: border-color 0.2s, transform 0.15s;
+  transition:
+    border-color 0.2s,
+    transform 0.15s;
 }
 
 .lista-item:hover {
@@ -394,7 +405,7 @@ select:focus {
 }
 
 .lista-item::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -403,12 +414,22 @@ select:focus {
   border-radius: var(--radius-md) 0 0 var(--radius-md);
 }
 
-.lista-item.receita::before { background: var(--green); }
-.lista-item.despesa::before { background: var(--red); }
+.lista-item.receita::before {
+  background: var(--green);
+}
+.lista-item.despesa::before {
+  background: var(--red);
+}
 
 @keyframes entrar {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .item-info {
@@ -438,13 +459,17 @@ select:focus {
 }
 
 .item-valor {
-  font-family: 'Syne', sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 15px;
   font-weight: 700;
 }
 
-.item-valor.receita { color: var(--green); }
-.item-valor.despesa { color: var(--red); }
+.item-valor.receita {
+  color: var(--green);
+}
+.item-valor.despesa {
+  color: var(--red);
+}
 
 .btn-deletar {
   background: none;
@@ -483,7 +508,6 @@ select:focus {
   opacity: 0.5;
 }
 
-
 /* ── 11. FOOTER ── */
 
 .footer {
@@ -492,7 +516,6 @@ select:focus {
   font-size: 12px;
   padding-top: 8px;
 }
-
 
 /* ── 12. RESPONSIVO ── */
 
