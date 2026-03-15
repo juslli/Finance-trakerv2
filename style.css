@@ -8,11 +8,12 @@
      4. Cards de resumo
      5. Painel (container genérico)
      6. Formulário
-     7. Filtros
-     8. Gráfico
-     9. Lista de transações
-    10. Footer
-    11. Responsivo
+     7. Validação inline
+     8. Filtros
+     9. Gráfico
+    10. Lista de transações
+    11. Footer
+    12. Responsivo
 ============================================================ */
 
 
@@ -140,7 +141,6 @@ body {
   border-color: var(--border2);
 }
 
-/* Linha colorida no topo de cada card */
 .card::before {
   content: '';
   position: absolute;
@@ -203,7 +203,6 @@ body {
   gap: 8px;
 }
 
-/* Barra roxa vertical antes do título */
 .painel-titulo::before {
   content: '';
   display: block;
@@ -252,7 +251,6 @@ select {
   -webkit-appearance: none;
 }
 
-/* Seta customizada no select */
 select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b5cf6' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -296,7 +294,17 @@ select:focus {
 }
 
 
-/* ── 7. FILTROS ── */
+/* ── 7. VALIDAÇÃO INLINE ── */
+
+.erro-msg {
+  font-size: 11px;
+  color: var(--red);
+  margin-top: 2px;
+  animation: entrar 0.2s ease;
+}
+
+
+/* ── 8. FILTROS ── */
 
 .filtros {
   display: flex;
@@ -331,10 +339,10 @@ select:focus {
 }
 
 
-/* ── 8. GRÁFICO ── */
+/* ── 9. GRÁFICO ── */
 
 .grafico-container {
-  display: none; /* aparece via JS quando tem despesas */
+  display: none;
   margin-bottom: 24px;
   padding: 20px;
   background: var(--bg3);
@@ -357,7 +365,7 @@ select:focus {
 }
 
 
-/* ── 9. LISTA DE TRANSAÇÕES ── */
+/* ── 10. LISTA DE TRANSAÇÕES ── */
 
 .lista {
   list-style: none;
@@ -385,7 +393,6 @@ select:focus {
   transform: translateX(2px);
 }
 
-/* Barra colorida lateral */
 .lista-item::before {
   content: '';
   position: absolute;
@@ -477,7 +484,7 @@ select:focus {
 }
 
 
-/* ── 10. FOOTER ── */
+/* ── 11. FOOTER ── */
 
 .footer {
   text-align: center;
@@ -487,7 +494,7 @@ select:focus {
 }
 
 
-/* ── 11. RESPONSIVO ── */
+/* ── 12. RESPONSIVO ── */
 
 @media (max-width: 480px) {
   .resumo {
@@ -505,11 +512,4 @@ select:focus {
   .header h1 {
     font-size: 28px;
   }
-}
-/* Mensagem de erro inline */
-.erro-msg {
-  font-size: 11px;
-  color: var(--red);
-  margin-top: 2px;
-  animation: entrar 0.2s ease;
 }
