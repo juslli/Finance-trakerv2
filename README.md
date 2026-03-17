@@ -35,7 +35,7 @@ Aplicação de controle financeiro pessoal com dashboard interativo em tempo rea
 
 ## 🌐 Acesse o projeto
 
-👉 [Clique aqui para acessar](COLE_AQUI_O_LINK)
+👉 [Clique aqui para acessar](https://juslli.github.io/Finance-trakerv2/)
 
 ---
 
