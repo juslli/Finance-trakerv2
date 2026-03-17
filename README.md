@@ -1,30 +1,62 @@
-# Finance Tracker 💸
+# 💰 Finance Tracker
 
-Aplicação de controle financeiro pessoal com dashboard em tempo real.
+Aplicação de controle financeiro pessoal com dashboard interativo em tempo real.
 
-![Preview do Finance Tracker](preview.png)
-
-## Funcionalidades
-
-- Adicionar receitas e despesas por categoria
-- Saldo calculado automaticamente em tempo real
-- Gráfico de rosca com despesas por categoria (Chart.js)
-- Filtros por tipo de transação (todos, receitas, despesas)
-- Validação de formulário inline sem alert()
-- Dados salvos no navegador com localStorage
-- Interface responsiva para mobile
-
-## Tecnologias
-
-![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
-![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=flat&logo=chartdotjs&logoColor=white)
-
-## Acesse o projeto
-
-🔗 [Finance Tracker ao vivo](https://juslli.github.io/Finance-trakerv2/)
+> Projeto desenvolvido para praticar manipulação de dados, construção de interfaces dinâmicas e criação de dashboards com JavaScript.
 
 ---
 
-Desenvolvido por [Junio Gianelli](https://github.com/juslli)
+## 🚀 Preview
+
+![Preview do projeto](./preview.png)
+
+---
+
+## ⚙️ Funcionalidades
+
+- Adicionar receitas e despesas por categoria
+- Cálculo automático do saldo em tempo real
+- Gráfico de despesas por categoria (Chart.js)
+- Filtros por tipo de transação
+- Validação de formulário sem alert()
+- Persistência de dados com localStorage
+- Interface responsiva
+
+---
+
+## 🛠️ Tecnologias
+
+- HTML5
+- CSS3
+- JavaScript
+- Chart.js
+
+---
+
+## 🌐 Acesse o projeto
+
+👉 [Clique aqui para acessar](COLE_AQUI_O_LINK)
+
+---
+
+## 🎯 Objetivo
+
+Este projeto foi desenvolvido com foco em evoluir minhas habilidades em JavaScript, especialmente na manipulação do DOM, organização de dados e construção de dashboards interativos com feedback visual em tempo real.
+
+---
+
+## 📚 Aprendizados
+
+Durante o desenvolvimento deste projeto, pratiquei:
+
+- Manipulação de dados financeiros
+- Atualização dinâmica da interface
+- Organização de código JavaScript
+- Integração com bibliotecas externas (Chart.js)
+- Persistência de dados no navegador
+
+---
+
+## 👨‍💻 Autor
+
+Desenvolvido por **Junio Gianelli**
